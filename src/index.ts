@@ -57,6 +57,22 @@ client.on(Events.Error, (error) => {
   console.error("Discord client error:", error);
 });
 
+client.on(Events.Warn, (warning) => {
+  console.warn("Discord client warning:", warning);
+});
+
+client.on(Events.ShardReady, (shardId) => {
+  console.log(`Discord shard ${shardId} ready.`);
+});
+
+client.on(Events.ShardError, (error, shardId) => {
+  console.error(`Discord shard ${shardId} error:`, error);
+});
+
+client.on(Events.ShardDisconnect, (event, shardId) => {
+  console.warn(`Discord shard ${shardId} disconnected: ${event.code} ${event.reason || ""}`.trim());
+});
+
 const logChannelLabels: Record<LogChannelKey, string> = {
   mod: "Moderation actions",
   message: "Message edits/deletes",
@@ -1046,6 +1062,12 @@ if (env.PORT) {
 }
 
 console.log("Logging in to Discord...");
+
+setTimeout(() => {
+  if (!client.isReady()) {
+    console.warn("Discord login is still waiting after 30 seconds. Check DISCORD_TOKEN, privileged intents, and whether another service is running the same bot token.");
+  }
+}, 30_000).unref();
 
 try {
   await client.login(env.DISCORD_TOKEN);
