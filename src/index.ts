@@ -53,6 +53,10 @@ client.once(Events.ClientReady, (readyClient) => {
   console.log(`Guardian online as ${readyClient.user.tag}`);
 });
 
+client.on(Events.Error, (error) => {
+  console.error("Discord client error:", error);
+});
+
 const logChannelLabels: Record<LogChannelKey, string> = {
   mod: "Moderation actions",
   message: "Message edits/deletes",
@@ -1041,4 +1045,11 @@ if (env.PORT) {
   });
 }
 
-await client.login(env.DISCORD_TOKEN);
+console.log("Logging in to Discord...");
+
+try {
+  await client.login(env.DISCORD_TOKEN);
+} catch (error) {
+  console.error("Discord login failed:", error);
+  process.exitCode = 1;
+}
