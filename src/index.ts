@@ -11,6 +11,7 @@ import {
   PartialMessageReaction,
   Partials
 } from "discord.js";
+import http from "node:http";
 import { handleMessageAutomod } from "./automod.js";
 import { CommandSyncMode, syncApplicationCommands } from "./commandSync.js";
 import { ConfigStore } from "./config.js";
@@ -1028,5 +1029,16 @@ client.on(Events.InteractionCreate, async (interaction) => {
     await interaction.reply({ content: "Raid gate settings saved.", ephemeral: true });
   }
 });
+
+if (env.PORT) {
+  const server = http.createServer((_request, response) => {
+    response.writeHead(200, { "content-type": "text/plain; charset=utf-8" });
+    response.end(client.isReady() ? "Guardian online\n" : "Guardian starting\n");
+  });
+
+  server.listen(env.PORT, () => {
+    console.log(`Health server listening on port ${env.PORT}`);
+  });
+}
 
 await client.login(env.DISCORD_TOKEN);

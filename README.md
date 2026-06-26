@@ -141,4 +141,4 @@ docker compose up -d --build
 docker compose run --rm guardian npm run deploy:commands
 ```
 
-Render deployment is also configured through `render.yaml`, but free hosts without persistent disks can lose `data/guardian.json` across rebuilds or restarts. See `docs/hosting.md` for the full hosting guide.
+Render deployment is also configured through `render.yaml` as a web service with a small health endpoint, but free hosts without persistent disks can lose `data/guardian.json` across rebuilds or restarts. See `docs/hosting.md` for the full hosting guide.

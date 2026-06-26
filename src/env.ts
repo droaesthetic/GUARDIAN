@@ -7,6 +7,7 @@ const optionalUrl = z.preprocess((value) => (value === "" ? undefined : value), 
 const EnvSchema = z.object({
   DISCORD_TOKEN: z.string().min(1),
   DISCORD_CLIENT_ID: z.string().min(1),
+  PORT: z.coerce.number().int().positive().optional(),
   DISCORD_GUILD_ID: optionalEnvString,
   NUDITY_PROVIDER_URL: optionalUrl,
   SIGHTENGINE_API_USER: optionalEnvString,

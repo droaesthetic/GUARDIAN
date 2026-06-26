@@ -1,6 +1,6 @@
 # Hosting Guardian
 
-Guardian is a long-running Discord bot, so it needs either a small VPS or a host that supports background workers. Static-site hosts and serverless functions are not a good fit.
+Guardian is a long-running Discord bot, so it needs either a small VPS or a host that can keep a Node process running. Static-site hosts and serverless functions are not a good fit.
 
 ## Best free VPS path: Oracle Cloud Always Free
 
@@ -34,9 +34,9 @@ docker compose run --rm guardian npm run deploy:commands
 
 The Docker setup stores bot state in the named `guardian-data` volume, mounted at `/data`.
 
-## Easiest free hosting path: Render
+## Easiest free hosting path: Render web service
 
-Render currently offers a $0 Hobby workspace and a free service instance type with 512 MB RAM and 0.1 CPU. This repository includes `render.yaml` for a background worker.
+Render currently offers a $0 Hobby workspace and a free service instance type with 512 MB RAM and 0.1 CPU. Some Render workspaces reject background workers with "service type is not available for this plan", so this repository uses `render.yaml` to deploy Guardian as a web service with a tiny health endpoint. The Discord bot still runs as the main process.
 
 Steps:
 
@@ -54,7 +54,7 @@ NUDITY_PROVIDER_URL
 SIGHTENGINE_NUDITY_THRESHOLD
 ```
 
-4. Deploy the worker.
+4. Deploy the web service.
 5. Open a Render shell or one-off job and run:
 
 ```bash
