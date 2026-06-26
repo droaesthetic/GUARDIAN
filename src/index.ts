@@ -1087,7 +1087,9 @@ setTimeout(() => {
 }, 30_000).unref();
 
 try {
-  await checkDiscordApi();
+  await checkDiscordApi().catch((error) => {
+    console.warn("Discord token preflight check was skipped after an error:", error);
+  });
   await client.login(env.DISCORD_TOKEN);
 } catch (error) {
   console.error("Discord login failed:", error);
