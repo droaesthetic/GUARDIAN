@@ -1,0 +1,14 @@
+services:
+  guardian:
+    build: .
+    container_name: guardian-discord-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      GUARDIAN_DATA_DIR: /data
+    volumes:
+      - guardian-data:/data
+
+volumes:
+  guardian-data:
