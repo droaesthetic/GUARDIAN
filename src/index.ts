@@ -1061,6 +1061,23 @@ if (env.PORT) {
   });
 }
 
+async function checkDiscordApi(): Promise<void> {
+  const response = await fetch("https://discord.com/api/v10/oauth2/applications/@me", {
+    headers: {
+      authorization: `Bot ${env.DISCORD_TOKEN}`
+    },
+    signal: AbortSignal.timeout(10_000)
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`Discord token check failed with HTTP ${response.status}: ${body}`);
+  }
+
+  const application = await response.json() as { id?: string; name?: string };
+  console.log(`Discord token check succeeded for application ${application.name ?? "unknown"} (${application.id ?? "unknown id"}).`);
+}
+
 console.log("Logging in to Discord...");
 
 setTimeout(() => {
@@ -1070,6 +1087,7 @@ setTimeout(() => {
 }, 30_000).unref();
 
 try {
+  await checkDiscordApi();
   await client.login(env.DISCORD_TOKEN);
 } catch (error) {
   console.error("Discord login failed:", error);
