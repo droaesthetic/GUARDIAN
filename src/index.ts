@@ -73,6 +73,18 @@ client.on(Events.ShardDisconnect, (event, shardId) => {
   console.warn(`Discord shard ${shardId} disconnected: ${event.code} ${event.reason || ""}`.trim());
 });
 
+client.on(Events.Debug, (message) => {
+  if (
+    message.includes("Preparing first heartbeat") ||
+    message.includes("Session Limit Information") ||
+    message.includes("Connecting to gateway") ||
+    message.includes("Identifying") ||
+    message.includes("Ready")
+  ) {
+    console.log(`Discord debug: ${message}`);
+  }
+});
+
 const logChannelLabels: Record<LogChannelKey, string> = {
   mod: "Moderation actions",
   message: "Message edits/deletes",
@@ -1065,7 +1077,7 @@ console.log("Logging in to Discord...");
 
 setTimeout(() => {
   if (!client.isReady()) {
-    console.warn("Discord login is still waiting after 30 seconds. Check DISCORD_TOKEN, privileged intents, and whether another service is running the same bot token.");
+    console.warn(`Discord login is still waiting after 30 seconds. Client status: ${client.ws.status}.`);
   }
 }, 30_000).unref();
 
